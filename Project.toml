@@ -1,4 +1,4 @@
-name = "MoabDB.com"
+name = "MoabDB"
 uuid = "3beae7ec-5d09-43e7-b044-93cf99fefe4f"
 authors = ["Jackson Coxson <jkcoxson@gmail.com>"]
 version = "0.1.0"
