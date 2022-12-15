@@ -1,6 +1,6 @@
 # MoabDB
 
-module moabdb
+module MoabDB
 
 using Dates
 using ProtoBuf
