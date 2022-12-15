@@ -1,0 +1,8 @@
+name = "MoabDB"
+uuid = "3beae7ec-5d09-43e7-b044-93cf99fefe4f"
+authors = ["Jackson Coxson <jkcoxson@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+ProtoBuf = "3349acd9-ac6a-5e09-bcdb-63829b23a429"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
