@@ -1,15 +1,20 @@
 name = "MoabDB"
 uuid = "3beae7ec-5d09-43e7-b044-93cf99fefe4f"
 authors = ["Jackson Coxson <jkcoxson@gmail.com>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Base64 = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+Pandas = "eadc2687-ae89-51f9-a5d9-86b5a6373a9c"
 ProtoBuf = "3349acd9-ac6a-5e09-bcdb-63829b23a429"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
 
 [compat]
 HTTP = "1.6.2"
 ProtoBuf = "1.0.9"
 julia = "^1.6"
+Pandas = "1.6.1"
+PyCall = "1.94.1"

@@ -6,29 +6,29 @@ using Dates
 using ProtoBuf
 using Base64
 using HTTP
+using PyCall
+import Pandas
+import DataFrames
 
 include("moabdb_pb.jl")
 
-function about()
-    println("Thank you for your interest in MoabDB's Julia library!")
-    println("Unfortunately, this library is very much under stale construction.")
-    println()
-    println("The current blocking issue is https://github.com/JuliaIO/Parquet.jl/issues/145")
-    println("Other options that also won't work are as follows:")
-    println("https://github.com/JuliaPy/Pandas.jl cannot read from bytes")
-    println("https://expandingman.gitlab.io/Parquet2.jl cannot read from bytes")
-    println("https://github.com/pola-rs/polars/issues/547 has no Julia interface")
-    println()
-    println("From a high level perspective, the best outcome is a complete Julia interface of Polars")
-    println("Until the MoabDB team develops an alternative or the JuliaIO team fixes this, please use our Python or Rust library.")
-    println("Contributions are open under our GitHub repo, sorry for the inconvenience.")
+function get_equity(ticker::String, start::DateTime, length, intraday::Bool=false, username::String="", password::String="")
+    end_time = start + length
+    get_equity(ticker, start, end_time, intraday, username, password)
 end
 
-function get_equity(ticker::String, start::DateTime, end_time::DateTime)
-    get_equity(ticker, start, end_time, false, "", "")
+function get_equity(ticker::String, length, end_time::DateTime, intraday::Bool=false, username::String="", password::String="")
+    start = end_time - length
+    get_equity(ticker, start, end_time, intraday, username, password)
 end
 
-function get_equity(ticker::String, start::DateTime, end_time::DateTime, intraday::Bool, username::String, password::String)
+function get_equity(ticker::String, length, intraday::Bool=false, username::String="", password::String="")
+    end_time = now()
+    start = end_time - length
+    get_equity(ticker, start, end_time, intraday, username, password)
+end
+
+function get_equity(ticker::String, start::DateTime, end_time::DateTime, intraday::Bool=false, username::String="", password::String="")
     start = floor(Int, datetime2unix(start));
     end_time = floor(Int, datetime2unix(end_time));
 
@@ -63,7 +63,21 @@ function get_equity(ticker::String, start::DateTime, end_time::DateTime, intrada
         throw(r.message)
     end
 
-    return r.data
+    pyio_import = pyimport("io")
+    python_io = pyio_import.BytesIO(r.data)
+    df = Pandas.read_parquet(python_io)
+
+    python_io = 0
+
+    df = DataFrames.DataFrame(df)
+    if intraday
+        df = DataFrames.select!(df, :symbol, :time, :price, :bid, :ask, :volume)
+    else
+        df = DataFrames.select!(df, :symbol, :date, :open, :low, :high, :close, :volume)
+        df[!,:volume] = DataFrames.convert(Vector{Int64},df[!,:volume])
+    end
+
+    return df
 end
 
 end # module moabdb
